@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ASHENBOUND: Survival RPG</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">SURVIVAL RPG // TURN-BASED</div>
+        <h1>ASHENBOUND</h1>
+      </div>
+      <div class="run-info">
+        <span>RUN <b id="run">01</b></span>
+        <span>FLOOR <b id="floor">1</b></span>
+        <span>GOLD <b id="gold">100</b> ◆</span>
+      </div>
+    </header>
+
+    <main>
+      <section id="classScreen" class="screen">
+        <div class="hero-copy">
+          <span class="badge">CHOOSE YOUR PATH</span>
+          <h2>Survive the ruins.<br><em>Become stronger.</em></h2>
+          <p>Every battle changes the run. Pick a class, build your stats, hunt better gear, and survive long enough to face the Warden.</p>
+        </div>
+        <div id="classCards" class="class-grid"></div>
+      </section>
+
+      <section id="gameScreen" class="screen hidden">
+        <div class="battle-layout">
+          <aside class="panel player-panel">
+            <div class="panel-title">YOUR CHARACTER</div>
+            <div class="character-head">
+              <div id="playerAvatar" class="avatar"></div>
+              <div>
+                <h2 id="playerName">Knight</h2>
+                <span id="playerClass" class="muted">VANGUARD</span>
+              </div>
+            </div>
+            <div class="hp-row"><span>HP</span><b id="playerHpText">100 / 100</b></div>
+            <div class="bar"><i id="playerHpBar"></i></div>
+            <div class="xp-row"><span>XP</span><b id="xpText">0 / 100</b></div>
+            <div class="bar xp"><i id="xpBar"></i></div>
+
+            <div class="stat-grid" id="statGrid"></div>
+
+            <div class="equipment">
+              <div class="panel-title">EQUIPMENT</div>
+              <div class="equip-line"><span>WEAPON</span><b id="weaponName">Rusty Blade</b></div>
+              <div class="equip-line"><span>ARMOR</span><b id="armorName">Traveler's Coat</b></div>
+              <div class="equip-line"><span>TRINKET</span><b id="trinketName">Empty</b></div>
+            </div>
+          </aside>
+
+          <section class="panel combat-panel">
+            <div class="battle-top">
+              <div>
+                <span class="badge" id="enemyType">ENCOUNTER</span>
+                <h2 id="enemyName">Goblin Scout</h2>
+                <span id="enemyLevel" class="muted">Lv. 1</span>
+              </div>
+              <div class="threat" id="threat">THREAT I</div>
+            </div>
+
+            <div class="arena">
+              <div id="enemySprite" class="enemy-sprite"><span class="sprite-core"></span></div>
+              <div class="vs">VS</div>
+              <div id="playerSprite" class="player-sprite"><span class="sprite-core"></span></div>
+            </div>
+
+            <div class="combat-hud" aria-label="Character status">
+              <div class="combat-hud-head"><span id="combatHudName">KNIGHT</span><b id="combatHudHpText">135 / 165 HP</b></div>
+              <div class="combat-hp-bar"><i id="combatHudHpBar"></i></div>
+              <div id="combatHudStats" class="combat-hud-stats"></div>
+            </div>
+
+            <div class="enemy-health">
+              <div><span>ENEMY HP</span><b id="enemyHpText">60 / 60</b></div>
+              <div class="bar"><i id="enemyHpBar"></i></div>
+            </div>
+
+            <div id="bodyParts" class="body-parts hidden"></div>
+            <div id="combatLog" class="combat-log"></div>
+
+            <div class="actions">
+              <button data-action="attack" class="action primary"><span>⚔</span><b>ATTACK</b><small>Basic damage</small></button>
+              <button data-action="skill" class="action"><span>✦</span><b id="skillName">SKILL</b><small id="skillDesc">Class ability</small></button>
+              <button id="guardAction" data-action="guard" class="action"><span>◈</span><b>GUARD</b><small>Reduce next hit</small></button>
+              <button data-action="potion" class="action"><span>✚</span><b>POTION</b><small id="potionText">2 remaining</small></button>
+              <button data-action="dagger" class="action consumable-action"><span>🗡️</span><b>THROWING DAGGER</b><small id="daggerText">0 remaining • free action</small></button>
+            </div>
+          </section>
+
+          <aside class="panel run-panel">
+            <div class="panel-title">RUN PROGRESS</div>
+            <div class="progress-ring"><strong id="kills">0</strong><span>KILLS</span></div>
+            <div class="milestone">
+              <span>NEXT SHOP</span>
+              <b id="shopProgress">3 / 3</b>
+            </div>
+            <div class="milestone">
+              <span>NEXT BOSS</span>
+              <b id="bossProgress">5 KILLS</b>
+            </div>
+            <div class="run-note">
+              <b>Survival Rule</b>
+              <p>Every 5 kills starts an elite encounter. Defeat all 5 elites to unlock the final boss. Shops appear after elite victories. Death ends the run.</p>
+            </div>
+            <button id="restartBtn" class="secondary-btn">NEW RUN</button>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="qtePanel" class="qte-panel hidden">
+    <div class="qte-inner">
+      <span class="badge">ELITE QTE</span>
+      <h2 id="qteTitle">DODGE NOW</h2>
+      <div id="qteTarget" class="qte-target">DODGE</div>
+      <p id="qtePrompt">React before the attack lands.</p>
+      <small id="qteHint">Use the button or keyboard.</small>
+      <div class="qte-actions">
+        <button id="qteDodge" class="primary-btn">DODGE</button>
+        <button id="qteBlock" class="secondary-btn">BLOCK</button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="parryPanel" class="parry-panel hidden">
+    <div class="parry-inner">
+      <span class="badge">GUARD OPENING</span>
+      <h2>PARRY</h2>
+      <div id="parryTarget" class="parry-target-label">LEFT</div>
+      <div id="parrySequence" class="parry-sequence">STEP 1 / 5</div>
+      <p id="parryHint">Hit the highlighted side. Five steps, six seconds total.</p>
+      <div class="parry-buttons">
+        <button id="parryLeft" class="parry-btn">◀<span>LEFT</span></button>
+        <button id="parryRight" class="parry-btn">▶<span>RIGHT</span></button>
+      </div>
+    </div>
+  </div>
+
+  <div id="shopModal" class="modal hidden">
+    <div class="shop panel">
+      <div class="shop-head">
+        <div>
+          <span class="badge">MERCHANT</span>
+          <h2>Campfire Market</h2>
+          <p>Spend your hard-earned gold. Humanity invented capitalism even in fantasy ruins.</p>
+        </div>
+        <button id="closeShop" class="close">×</button>
+      </div>
+      <div id="shopItems" class="shop-grid"></div>
+    </div>
+  </div>
+
+  <div id="gameOverModal" class="modal hidden">
+    <div class="gameover panel">
+      <span class="badge">RUN ENDED</span>
+      <h2>You Fell in the Ruins</h2>
+      <p id="gameOverText"></p>
+      <button id="restartBtn2" class="primary-btn">START NEW RUN</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
